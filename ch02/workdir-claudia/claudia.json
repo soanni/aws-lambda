@@ -1,0 +1,7 @@
+{
+  "lambda": {
+    "role": "workdir-claudia-executor",
+    "name": "workdir-claudia",
+    "region": "us-west-2"
+  }
+}

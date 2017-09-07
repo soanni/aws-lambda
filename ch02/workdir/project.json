@@ -1,0 +1,8 @@
+{
+  "name": "apex-helloworld",
+  "description": "My first function deployed using Apex",
+  "memory": 128,
+  "timeout": 5,
+  "role": "arn:aws:iam::003550747411:role/apex-helloworld_lambda_function",
+  "environment": {}
+}
