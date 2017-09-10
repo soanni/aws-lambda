@@ -1,0 +1,9 @@
+{
+	"name": "eventDriven",
+	"description": "event-driven use case using pre-configured triggers",
+	"runtime": "nodejs4.3",
+	"memory": 128,
+	"timeout": 60,
+	"role": "arn:aws:iam::003550747411:role/myApexLambdaProjRole",
+	"environment": {}
+}

@@ -1,3 +1,7 @@
+.terraform
 node_modules
 set_envs.ps1
+terraform.tfvars
+*.tfstate
+*.tfstate.backup
 *.exe

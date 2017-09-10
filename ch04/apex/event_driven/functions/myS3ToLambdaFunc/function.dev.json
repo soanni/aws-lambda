@@ -1,0 +1,8 @@
+{
+	"description": "Node.js Lambda function using S3 as a trigger to transform the uploaded image and then upload the new image to S3",
+	"role": "arn:aws:iam::003550747411:role/myLambdaS3FuncRole",
+	"handler": "index.handler",
+	"environment": {
+		"TRANSFORM_FUNC": "negative"
+	}
+}
