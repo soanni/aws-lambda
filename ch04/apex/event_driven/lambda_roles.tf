@@ -5,8 +5,8 @@ provider "aws" {
 }
 
 
-resource "aws_iam_role" "myApexLambdaProjRole" {
-  name = "myApexLambdaProjRole"
+resource "aws_iam_role" "myLambdaDynamoFuncRole" {
+  name = "myLambdaDynamoFuncRole"
 
   assume_role_policy = <<EOF
 {
@@ -45,6 +45,41 @@ resource "aws_iam_role" "myLambdaS3FuncRole" {
 EOF
 }
 
+resource "aws_iam_role_policy" "myLambdaDynamoFuncPolicy" {
+  name = "myLambdaDynamoFuncPolicy"
+  role = "${aws_iam_role.myLambdaDynamoFuncRole.id}"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:DescribeStream",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:ListStreams",
+        "dynamodb:DeleteItem"
+      ],
+      "Resource": [
+        "arn:aws:dynamodb:us-west-2:003550747411:table/LambdaTriggerDB*"
+      ]    
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ],
+      "Resource": "arn:aws:logs:*:*:*"
+    }
+  ]
+}
+EOF
+}
+
 resource "aws_iam_role_policy" "myLambdaS3FuncPolicy" {
   name = "myLambdaS3FuncPolicy"
   role = "${aws_iam_role.myLambdaS3FuncRole.id}"
@@ -60,20 +95,7 @@ resource "aws_iam_role_policy" "myLambdaS3FuncPolicy" {
         "s3:PutObject"
       ],
       "Resource": "*"
-    }
-  ]
-}
-EOF
-}
-
-resource "aws_iam_role_policy" "myApexLambdaProjPolicy" {
-  name = "myApexLambdaProjPolicy"
-  role = "${aws_iam_role.myApexLambdaProjRole.id}"
-
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
+    },
     {
       "Effect": "Allow",
       "Action": [
@@ -81,7 +103,7 @@ resource "aws_iam_role_policy" "myApexLambdaProjPolicy" {
         "logs:CreateLogStream",
         "logs:PutLogEvents"
       ],
-      "Resource": "*"
+      "Resource": "arn:aws:logs:*:*:*"
     }
   ]
 }

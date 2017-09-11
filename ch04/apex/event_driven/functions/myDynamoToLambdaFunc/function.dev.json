@@ -1,0 +1,6 @@
+{
+	"description": "Node.js Lambda function using DynamoDB as a trigger to validate the value of the inserted IP address and deletes it if it's invalid.",
+	"role": "arn:aws:iam::003550747411:role/myLambdaDynamoFuncRole",
+	"handler": "index.handler",
+	"environment": {}
+}
