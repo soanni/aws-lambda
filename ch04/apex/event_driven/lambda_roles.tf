@@ -65,6 +65,26 @@ resource "aws_iam_role" "myLambdaSnsFuncRole" {
 EOF
 }
 
+resource "aws_iam_role" "myLambdaCWScheduleFuncRole" {
+  name = "myLambdaCWScheduleFuncRole"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
+}
+
 resource "aws_iam_role_policy" "myLambdaDynamoFuncPolicy" {
   name = "myLambdaDynamoFuncPolicy"
   role = "${aws_iam_role.myLambdaDynamoFuncRole.id}"
@@ -144,6 +164,42 @@ resource "aws_iam_role_policy" "myLambdaSnsFuncPolicy" {
         "dynamodb:PutItem"
       ],
       "Resource": "arn:aws:dynamodb:us-west-2:003550747411:table/LambdaTriggerSNS"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ],
+      "Resource": "arn:aws:logs:*:*:*"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy" "myLambdaCWScheduleFuncPolicy" {
+  name = "myLambdaCWScheduleFuncPolicy"
+  role = "${aws_iam_role.myLambdaCWScheduleFuncRole.id}"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:Scan"
+      ],
+      "Resource": "arn:aws:dynamodb:us-west-2:003550747411:table/LambdaExportToS3*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:PutObject"
+      ],
+      "Resource": "arn:aws:s3:::dynamodb-backup-s3*"
     },
     {
       "Effect": "Allow",
