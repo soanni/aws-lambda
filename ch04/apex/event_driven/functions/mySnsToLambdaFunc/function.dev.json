@@ -1,0 +1,6 @@
+{
+	"description": "Node.js Lambda function using SNS as a trigger to generate an MD5 of the message received and store it in the database",
+	"role": "arn:aws:iam::003550747411:role/myLambdaSnsFuncRole",
+	"handler": "index.handler",
+	"environment": {}
+}

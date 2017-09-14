@@ -45,6 +45,26 @@ resource "aws_iam_role" "myLambdaS3FuncRole" {
 EOF
 }
 
+resource "aws_iam_role" "myLambdaSnsFuncRole" {
+  name = "myLambdaSnsFuncRole"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
+}
+
 resource "aws_iam_role_policy" "myLambdaDynamoFuncPolicy" {
   name = "myLambdaDynamoFuncPolicy"
   role = "${aws_iam_role.myLambdaDynamoFuncRole.id}"
@@ -95,6 +115,35 @@ resource "aws_iam_role_policy" "myLambdaS3FuncPolicy" {
         "s3:PutObject"
       ],
       "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ],
+      "Resource": "arn:aws:logs:*:*:*"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy" "myLambdaSnsFuncPolicy" {
+  name = "myLambdaSnsFuncPolicy"
+  role = "${aws_iam_role.myLambdaSnsFuncRole.id}"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:PutItem"
+      ],
+      "Resource": "arn:aws:dynamodb:us-west-2:003550747411:table/LambdaTriggerSNS"
     },
     {
       "Effect": "Allow",
