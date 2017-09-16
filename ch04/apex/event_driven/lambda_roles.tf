@@ -85,6 +85,26 @@ resource "aws_iam_role" "myLambdaCWScheduleFuncRole" {
 EOF
 }
 
+resource "aws_iam_role" "myLambdaKinesisFuncRole" {
+  name = "myLambdaKinesisFuncRole"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
+}
+
 resource "aws_iam_role_policy" "myLambdaDynamoFuncPolicy" {
   name = "myLambdaDynamoFuncPolicy"
   role = "${aws_iam_role.myLambdaDynamoFuncRole.id}"
@@ -200,6 +220,45 @@ resource "aws_iam_role_policy" "myLambdaCWScheduleFuncPolicy" {
         "s3:PutObject"
       ],
       "Resource": "arn:aws:s3:::dynamodb-backup-s3*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ],
+      "Resource": "arn:aws:logs:*:*:*"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy" "myLambdaKinesisFuncPolicy" {
+  name = "myLambdaKinesisFuncPolicy"
+  role = "${aws_iam_role.myLambdaKinesisFuncRole.id}"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "kinesis:DescribeStream",
+        "kinesis:GetRecords",
+        "kinesis:GetShardIterator",
+        "kinesis:ListStreams"
+      ],
+      "Resource": "arn:aws:kinesis:us-west-2:003550747411:stream/myKinesisStream"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "sns:Publish"
+      ],
+      "Resource": "arn:aws:sns:us-west-2:003550747411:kinesisLambdaTest"
     },
     {
       "Effect": "Allow",

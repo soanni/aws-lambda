@@ -1,0 +1,1 @@
+./apex -r us-west-2 --env dev deploy myKinesisToLambdaFunc

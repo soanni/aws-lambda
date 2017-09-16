@@ -1,0 +1,6 @@
+{
+	"description": "Node.js Lambda function using Kinesis streams as a trigger to send an SNS for error messages received from the stream",
+	"role": "arn:aws:iam::003550747411:role/myLambdaKinesisFuncRole",
+	"handler": "index.handler",
+	"environment": {}
+}
