@@ -125,6 +125,26 @@ resource "aws_iam_role" "myLambdaGitFuncRole" {
 EOF
 }
 
+resource "aws_iam_role" "mySlackBotFuncRole" {
+  name = "mySlackBotFuncRole"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
+}
+
 resource "aws_iam_role_policy" "myLambdaDynamoFuncPolicy" {
   name = "myLambdaDynamoFuncPolicy"
   role = "${aws_iam_role.myLambdaDynamoFuncRole.id}"
@@ -297,6 +317,37 @@ EOF
 resource "aws_iam_role_policy" "myLambdaGitFuncPolicy" {
   name = "myLambdaGitFuncPolicy"
   role = "${aws_iam_role.myLambdaGitFuncRole.id}"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "kms:Decrypt"
+      ],
+      "Resource": [
+        "*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ],
+      "Resource": "arn:aws:logs:*:*:*"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy" "mySlackBotFuncPolicy" {
+  name = "mySlackBotFuncPolicy"
+  role = "${aws_iam_role.mySlackBotFuncRole.id}"
 
   policy = <<EOF
 {

@@ -1,0 +1,9 @@
+{
+	"description": "Node.js Lambda function to show integration between Slack and Lambda via SNS service",
+	"role": "arn:aws:iam::003550747411:role/mySlackBotFuncRole",
+	"handler": "index.handler",
+	"environment": {
+		"kmsEncryptedHookUrl": "<slack_hook_url_without_protocol>",
+		"slackChannel": "<channel_name>"
+	}
+}
