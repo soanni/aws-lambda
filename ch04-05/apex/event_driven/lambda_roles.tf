@@ -105,6 +105,26 @@ resource "aws_iam_role" "myLambdaKinesisFuncRole" {
 EOF
 }
 
+resource "aws_iam_role" "myLambdaGitFuncRole" {
+  name = "myLambdaGitFuncRole"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
+}
+
 resource "aws_iam_role_policy" "myLambdaDynamoFuncPolicy" {
   name = "myLambdaDynamoFuncPolicy"
   role = "${aws_iam_role.myLambdaDynamoFuncRole.id}"
@@ -259,6 +279,37 @@ resource "aws_iam_role_policy" "myLambdaKinesisFuncPolicy" {
         "sns:Publish"
       ],
       "Resource": "arn:aws:sns:us-west-2:003550747411:kinesisLambdaTest"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ],
+      "Resource": "arn:aws:logs:*:*:*"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy" "myLambdaGitFuncPolicy" {
+  name = "myLambdaGitFuncPolicy"
+  role = "${aws_iam_role.myLambdaGitFuncRole.id}"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "kms:Decrypt"
+      ],
+      "Resource": [
+        "*"
+      ]
     },
     {
       "Effect": "Allow",

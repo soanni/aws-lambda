@@ -1,0 +1,10 @@
+{
+	"description": "Node.js Lambda function to show integration between Git and lambda via SNS service",
+	"role": "arn:aws:iam::003550747411:role/myLambdaGitFuncRole",
+	"handler": "index.handler",
+	"environment": {
+		"kmsEncryptedAPIKey": "<Your API key>",
+		"taskListID": "<Task List ID>",
+		"teamworkCompany": "<Teamwork Company Name>"
+	}
+}
