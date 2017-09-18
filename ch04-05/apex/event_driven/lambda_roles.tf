@@ -145,6 +145,26 @@ resource "aws_iam_role" "mySlackBotFuncRole" {
 EOF
 }
 
+resource "aws_iam_role" "myWeatherLambdaFuncRole" {
+  name = "myWeatherLambdaFuncRole"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
+}
+
 resource "aws_iam_role_policy" "myLambdaDynamoFuncPolicy" {
   name = "myLambdaDynamoFuncPolicy"
   role = "${aws_iam_role.myLambdaDynamoFuncRole.id}"
@@ -361,6 +381,44 @@ resource "aws_iam_role_policy" "mySlackBotFuncPolicy" {
       "Resource": [
         "*"
       ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ],
+      "Resource": "arn:aws:logs:*:*:*"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy" "myWeatherLambdaFuncPolicy" {
+  name = "myWeatherLambdaFuncPolicy"
+  role = "${aws_iam_role.myWeatherLambdaFuncRole.id}"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "kms:Decrypt"
+      ],
+      "Resource": [
+        "*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "sns:Publish"
+      ],
+      "Resource": "arn:aws:sns:us-west-2:003550747411:myWeatherSns"
     },
     {
       "Effect": "Allow",
