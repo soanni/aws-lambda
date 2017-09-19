@@ -1,0 +1,30 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Simple Calc web service. State is stored in a DynamoDB table.
+Resources:
+  CalcGetFunction:
+    Properties:
+      CodeUri: s3://soanni-sam-codebase/863d30dd039d0c69dce5c19af231b6af
+      Environment:
+        Variables:
+          TABLE_NAME:
+            Ref: Table
+      Events:
+        GetResource:
+          Properties:
+            Method: get
+            Path: /calc/{operand1}/{operand2}/{operator}
+          Type: Api
+      Handler: index.handler
+      Policies: AmazonDynamoDBFullAccess
+      Runtime: nodejs4.3
+    Type: AWS::Serverless::Function
+  Table:
+    Properties:
+      PrimaryKey:
+        Name: calcAnswer
+        Type: Number
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+    Type: AWS::Serverless::SimpleTable
+Transform: AWS::Serverless-2016-10-31
